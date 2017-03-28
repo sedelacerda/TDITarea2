@@ -1,13 +1,19 @@
 Rails.application.routes.draw do
-  get 'usuario/new'
 
-  get 'usuario/show'
+  #Crear un usuario
+  put '/usuario', to: 'users#create'
 
-  get 'usuario/edit'
+  #Obtener un usuario
+  get '/usuario/:id', to: 'users#show'
 
-  get 'usuario/index'
+  #Editar un usuario
+  post '/usuario/:id', to: 'users#update'
 
-  get 'usuario/destroy'
+  #Eliminar un usuario
+  delete '/usuario/:id', to: 'users#destroy'
+
+  #Listar todos los usuarios
+  get '/usuario', to: 'users#index'
 
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end
