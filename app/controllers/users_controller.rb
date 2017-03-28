@@ -32,18 +32,34 @@ class UsersController < ApplicationController
   #Editar un usuario
   #POST /usuario/id
   def update
-    if @usuario.update(user_params)
-      head :no_content, status: :ok
+    if params[:id] != nil
+      message = {'error' => 'id no es modificable'}.to_json
+      render :json => message, status: :bad_request
+    end
+
+    if @usuario != nil
+      if @usuario.update(user_params)
+        render json: @usuario, status: :ok
+      else
+        message = {'error' => 'La modificación ha fallado'}.to_json
+        render :json => message, status: :internal_server_error
+      end
     else
-      render json: @usuario.errors, status: :unprocessable_entity
+      message = {'error' => 'Usuario no encontrado'}.to_json
+      render :json => message, status: :not_found
     end
   end
 
   #Eliminar un usuario
   #DELETE /usuario/id
   def destroy
-    @usuario.destroy
-    head :no_content
+    if @usuario.nil?
+      message = {'error' => 'Usuario no encontrado'}.to_json
+      render :json => message, status: :not_found
+    else
+      @usuario.destroy
+      head :no_content
+    end
   end
 
   #Listar todos los usuarios
