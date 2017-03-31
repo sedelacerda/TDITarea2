@@ -33,22 +33,28 @@ class UsersController < ApplicationController
   #Editar un usuario
   #POST /usuario/id
   def update
-    if params[:id] != nil
-      message = {'error' => 'id no es modificable'}.to_json
-      render :json => message, status: :bad_request
-      return
-    end
+    puts '###########################'
+    puts request.raw_post
 
     if @usuario != nil
       if @usuario.update(user_params)
         render json: @usuario, status: :ok
+        return
       else
         message = {'error' => 'La modificación ha fallado'}.to_json
         render :json => message, status: :internal_server_error
+        return
       end
     else
       message = {'error' => 'Usuario no encontrado'}.to_json
       render :json => message, status: :not_found
+      return
+    end
+
+    if params[:id] != nil
+      message = {'error' => 'id no es modificable'}.to_json
+      render :json => message, status: :bad_request
+      return
     end
   end
 
