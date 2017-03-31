@@ -13,7 +13,8 @@ class UsersController < ApplicationController
       if @usuario.save
         render json: @usuario, status: :created
       else
-        render json: @usuario.errors, status: :internal_server_error
+        message = {'error' => 'La creación ha fallado'}.to_json
+        render json: message, status: :internal_server_error
       end
     end
   end
@@ -35,6 +36,7 @@ class UsersController < ApplicationController
     if params[:id] != nil
       message = {'error' => 'id no es modificable'}.to_json
       render :json => message, status: :bad_request
+      return
     end
 
     if @usuario != nil
@@ -66,7 +68,8 @@ class UsersController < ApplicationController
   #GET /usuario
   def index
     @usuarios = User.all
-    render json: @usuarios, status: :ok
+    message = {'usuarios' => @usuarios, 'total' => @usuarios.count}.to_json
+    render json: message, status: :ok
   end
 
 
@@ -80,8 +83,8 @@ class UsersController < ApplicationController
       end
     end
 
-    #def usuario_create_params
-    #  params.require(:usuario, :usuario, :nombre).permit(:apellido, :twitter)
+    #def user_create_params
+    #  params.require(:usuario, :nombre).permit(:apellido, :twitter)
     #end
 
     def user_params
